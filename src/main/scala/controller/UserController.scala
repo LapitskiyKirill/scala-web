@@ -20,45 +20,49 @@ class UserController {
   def getRoute: Route = route
 
   val route: Route = concat(
-    post {
-      path("create-user") {
-        entity(as[User]) { user =>
-          val saved: Future[Int] = UserService.create(user)
-          onSuccess(saved) { _ =>
-            complete("user created")
+    pathPrefix("user") {
+      concat(
+        post {
+          path("create") {
+            entity(as[User]) { user =>
+              val saved: Future[Int] = UserService.create(user)
+              onSuccess(saved) { _ =>
+                complete("user created")
+              }
+            }
+          }
+        },
+        delete {
+          path("delete") {
+            parameters("id") { id =>
+              val deleted = UserService.deleteById(id.toInt)
+              onSuccess(deleted) { _ =>
+                complete("user deleted")
+              }
+            }
+          }
+        },
+        post {
+          path("update") {
+            entity(as[User]) { user =>
+              val updated = UserService.update(user)
+              onSuccess(updated) { _ =>
+                complete("user updated")
+              }
+            }
+          }
+        },
+        get {
+          path("find") {
+            parameters("id") { id =>
+              val result = UserService.findById(id.toInt)
+              onSuccess(result) { result =>
+                complete(result)
+              }
+            }
           }
         }
-      }
-    },
-    delete {
-      path("delete-user") {
-        parameters("id") { id =>
-          val deleted = UserService.deleteById(id.toInt)
-          onSuccess(deleted) { _ =>
-            complete("user deleted")
-          }
-        }
-      }
-    },
-    post {
-      path("update-user") {
-        entity(as[User]) { user =>
-          val updated = UserService.update(user)
-          onSuccess(updated) { _ =>
-            complete("user updated")
-          }
-        }
-      }
-    },
-    get {
-      path("find-user") {
-        parameters("id") { id =>
-          val result = UserService.findById(id)
-          onSuccess(result) { result =>
-            complete(result)
-          }
-        }
-      }
+      )
     }
   )
 }

@@ -17,28 +17,32 @@ class UserGroupController {
   def getRoute: Route = route
 
   val route: Route = concat(
-    post {
-      path("add-user-to-group") {
-        entity(as[UserGroup]) { userGroup =>
-          val saved = UserGroupService.addUserToGroup(userGroup)
-          onSuccess(saved) {
-            case Right(_) => complete("Success")
-            case Left(x) => complete(x)
+    pathPrefix("user-group") {
+      concat(
+        post {
+          path("add") {
+            entity(as[UserGroup]) { userGroup =>
+              val saved = UserGroupService.addUserToGroup(userGroup)
+              onSuccess(saved) {
+                case Right(_) => complete("Success")
+                case Left(x) => complete(x)
+              }
+            }
+          }
+        },
+        post {
+          path("remove") {
+            entity(as[UserGroup]) {
+              userGroup =>
+                val deleted = UserGroupService.deleteUserFromGroup(userGroup)
+                onSuccess(deleted) {
+                  case Right(_) => complete("Success")
+                  case Left(x) => complete(x)
+                }
+            }
           }
         }
-      }
-    },
-    post {
-      path("delete-user-from-group") {
-        entity(as[UserGroup]) {
-          userGroup =>
-            val deleted = UserGroupService.deleteUserFromGroup(userGroup)
-            onSuccess(deleted) {
-              case Right(_) => complete("Success")
-              case Left(x) => complete(x)
-            }
-        }
-      }
+      )
     }
   )
 }

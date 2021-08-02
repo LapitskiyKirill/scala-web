@@ -20,45 +20,49 @@ class GroupController {
   def getRoute: Route = route
 
   val route: Route = concat(
-    post {
-      path("create-group") {
-        entity(as[Group]) { group =>
-          val saved: Future[Int] = GroupService.create(group)
-          onSuccess(saved) { _ =>
-            complete("group created")
+    pathPrefix("group") {
+      concat(
+        post {
+          path("create") {
+            entity(as[Group]) { group =>
+              val saved: Future[Int] = GroupService.create(group)
+              onSuccess(saved) { _ =>
+                complete("group created")
+              }
+            }
+          }
+        },
+        delete {
+          path("delete") {
+            parameters("id") { id =>
+              val deleted = GroupService.delete(id.toInt)
+              onSuccess(deleted) { _ =>
+                complete("group deleted")
+              }
+            }
+          }
+        },
+        post {
+          path("update") {
+            entity(as[Group]) { group =>
+              val updated = GroupService.update(group)
+              onSuccess(updated) { _ =>
+                complete("group updated")
+              }
+            }
+          }
+        },
+        get {
+          path("find") {
+            parameters("id") { id =>
+              val result = GroupService.findById(id.toInt)
+              onSuccess(result) { result =>
+                complete(result)
+              }
+            }
           }
         }
-      }
-    },
-    delete {
-      path("delete-group") {
-        parameters("id") { id =>
-          val deleted = GroupService.delete(id.toInt)
-          onSuccess(deleted) { _ =>
-            complete("group deleted")
-          }
-        }
-      }
-    },
-    post {
-      path("update-group") {
-        entity(as[Group]) { group =>
-          val updated = GroupService.update(group)
-          onSuccess(updated) { _ =>
-            complete("group updated")
-          }
-        }
-      }
-    },
-    get {
-      path("find-group") {
-        parameters("id") { id =>
-          val result = GroupService.findById(id.toInt)
-          onSuccess(result) { result =>
-            complete(result)
-          }
-        }
-      }
+      )
     }
   )
 }

@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"1name\", \n    \"lastName\":\"lname\",\n    \"dob\":\"idk\", \n    \"email\":\"email@email.email\",\n    \"password\":\"password\"\n   }",
+					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"1name\", \n    \"lastName\":\"lname\",\n    \"dob\":\"idk\", \n    \"email\":\"emai3@email.email\",\n    \"password\":\"password\"\n   }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20,13 +20,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/create-user",
+					"raw": "localhost:8080/user/create",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"create-user"
+						"user",
+						"create"
 					]
 				}
 			},
@@ -47,13 +48,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/create-group",
+					"raw": "localhost:8080/group/create",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"create-group"
+						"group",
+						"create"
 					]
 				}
 			},
@@ -74,13 +76,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/add-user-to-group",
+					"raw": "localhost:8080/user-group/add",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"add-user-to-group"
+						"user-group",
+						"add"
 					]
 				}
 			},
@@ -101,13 +104,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/delete-user-from-group",
+					"raw": "localhost:8080/user-group/remove",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"delete-user-from-group"
+						"user-group",
+						"remove"
 					]
 				}
 			},
@@ -119,13 +123,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/delete-user?id=4",
+					"raw": "localhost:8080/user/delete?id=4",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"delete-user"
+						"user",
+						"delete"
 					],
 					"query": [
 						{
@@ -143,13 +148,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/delete-group?id=2",
+					"raw": "localhost:8080/group/delete?id=2",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"delete-group"
+						"group",
+						"delete"
 					],
 					"query": [
 						{
@@ -167,13 +173,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/update-group?id=1&newDisplayName=newDisplayName",
+					"raw": "localhost:8080/group/update?id=1&newDisplayName=newDisplayName",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"update-group"
+						"group",
+						"update"
 					],
 					"query": [
 						{
@@ -209,13 +216,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/update-group",
+					"raw": "localhost:8080/group/update",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"update-group"
+						"group",
+						"update"
 					],
 					"query": [
 						{
@@ -256,13 +264,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/find-user?id=1",
+					"raw": "localhost:8080/user/find?id=1",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"find-user"
+						"user",
+						"find"
 					],
 					"query": [
 						{
@@ -302,13 +311,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/find-group?id=1",
+					"raw": "localhost:8080/group/find?id=1",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"find-group"
+						"group",
+						"find"
 					],
 					"query": [
 						{
