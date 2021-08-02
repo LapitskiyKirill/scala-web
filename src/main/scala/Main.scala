@@ -32,7 +32,7 @@ object Main {
           entity(as[User]) { user =>
             val saved: Future[Int] = userRepository.save(user)
             onSuccess(saved) { _ =>
-              complete("order created")
+              complete("user created")
             }
           }
         }

@@ -116,7 +116,7 @@
 		{
 			"name": "delete user",
 			"request": {
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"url": {
 					"raw": "localhost:8080/delete-user?userEmail=email@email.email",
@@ -140,7 +140,7 @@
 		{
 			"name": "delete group",
 			"request": {
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"url": {
 					"raw": "localhost:8080/delete-group?displayName=displayName",
