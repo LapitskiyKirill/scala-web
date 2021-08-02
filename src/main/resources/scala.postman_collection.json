@@ -66,7 +66,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userEmail\":\"email@email.email\",\n    \"groupDisplayName\":\"displayName\"\n}",
+					"raw": "{\n    \"id\":0,\n    \"userId\":\"email2@email.email\",\n    \"groupId\":\"displayName1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -93,7 +93,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userEmail\":\"email@email.email\",\n    \"groupDisplayName\":\"displayName\"\n}",
+					"raw": "{\n    \"id\":0,\n    \"userId\":\"email2@email.email\",\n    \"groupId\":\"displayName1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -119,7 +119,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/delete-user?userEmail=email@email.email",
+					"raw": "localhost:8080/delete-user?id=4",
 					"host": [
 						"localhost"
 					],
@@ -129,8 +129,8 @@
 					],
 					"query": [
 						{
-							"key": "userEmail",
-							"value": "email@email.email"
+							"key": "id",
+							"value": "4"
 						}
 					]
 				}
@@ -143,7 +143,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/delete-group?displayName=displayName",
+					"raw": "localhost:8080/delete-group?id=2",
 					"host": [
 						"localhost"
 					],
@@ -153,8 +153,8 @@
 					],
 					"query": [
 						{
-							"key": "displayName",
-							"value": "displayName"
+							"key": "id",
+							"value": "2"
 						}
 					]
 				}
@@ -167,7 +167,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/update-group?displayName=displayName&newDisplayName=newDisplayName&=",
+					"raw": "localhost:8080/update-group?id=1&newDisplayName=newDisplayName",
 					"host": [
 						"localhost"
 					],
@@ -177,16 +177,17 @@
 					],
 					"query": [
 						{
-							"key": "displayName",
-							"value": "displayName"
+							"key": "id",
+							"value": "1"
 						},
 						{
 							"key": "newDisplayName",
 							"value": "newDisplayName"
 						},
 						{
-							"key": null,
-							"value": ""
+							"key": "",
+							"value": "",
+							"disabled": true
 						}
 					]
 				}
@@ -198,8 +199,17 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"1name\", \n    \"lastName\":\"lname\",\n    \"dob\":\"idk\", \n    \"email\":\"emai3@email.email\",\n    \"password\":\"password\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:8080/update-group?displayName=displayName&newDisplayName=newDisplayName&=",
+					"raw": "localhost:8080/update-group",
 					"host": [
 						"localhost"
 					],
@@ -210,15 +220,18 @@
 					"query": [
 						{
 							"key": "displayName",
-							"value": "displayName"
+							"value": "displayName",
+							"disabled": true
 						},
 						{
 							"key": "newDisplayName",
-							"value": "newDisplayName"
+							"value": "newDisplayName",
+							"disabled": true
 						},
 						{
 							"key": "",
-							"value": ""
+							"value": "",
+							"disabled": true
 						}
 					]
 				}
@@ -243,7 +256,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/find-user?email=email1@email.email",
+					"raw": "localhost:8080/find-user?id=1",
 					"host": [
 						"localhost"
 					],
@@ -258,8 +271,8 @@
 							"disabled": true
 						},
 						{
-							"key": "email",
-							"value": "email1@email.email"
+							"key": "id",
+							"value": "1"
 						},
 						{
 							"key": "",
@@ -289,7 +302,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/find-group?displayName=displayName3",
+					"raw": "localhost:8080/find-group?id=1",
 					"host": [
 						"localhost"
 					],
@@ -299,8 +312,8 @@
 					],
 					"query": [
 						{
-							"key": "displayName",
-							"value": "displayName3"
+							"key": "id",
+							"value": "1"
 						},
 						{
 							"key": "email",
