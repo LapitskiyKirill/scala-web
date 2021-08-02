@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "17b051f3-8cee-4c2e-a51e-7b9ea208c7b5",
+		"name": "scala",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"1name\", \n    \"lastName\":\"lname\",\n    \"dob\":\"idk\", \n    \"email\":\"email@email.email\",\n    \"password\":\"password\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/create-user",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"create-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 0,\n    \"displayName\":\"displayName\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/create-group",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"create-group"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add user to group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userEmail\":\"email@email.email\",\n    \"groupDisplayName\":\"displayName\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/add-user-to-group",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"add-user-to-group"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user from group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userEmail\":\"email@email.email\",\n    \"groupDisplayName\":\"displayName\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/delete-user-from-group",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"delete-user-from-group"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/delete-user?userEmail=email@email.email",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"delete-user"
+					],
+					"query": [
+						{
+							"key": "userEmail",
+							"value": "email@email.email"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/delete-group?displayName=displayName",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"delete-group"
+					],
+					"query": [
+						{
+							"key": "displayName",
+							"value": "displayName"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/update-group?displayName=displayName&newDisplayName=newDisplayName&=",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"update-group"
+					],
+					"query": [
+						{
+							"key": "displayName",
+							"value": "displayName"
+						},
+						{
+							"key": "newDisplayName",
+							"value": "newDisplayName"
+						},
+						{
+							"key": null,
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/update-group?displayName=displayName&newDisplayName=newDisplayName&=",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"update-group"
+					],
+					"query": [
+						{
+							"key": "displayName",
+							"value": "displayName"
+						},
+						{
+							"key": "newDisplayName",
+							"value": "newDisplayName"
+						},
+						{
+							"key": "",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "find user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"firstName\", \n    \"lastName\":\"lastName\",\n    \"dob\":\"idk\", \n    \"email\":\"email3@email.email\",\n    \"password\":\"password1\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/find-user?email=email1@email.email",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"find-user"
+					],
+					"query": [
+						{
+							"key": "displayName",
+							"value": "displayName",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "email1@email.email"
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "find group",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"firstName\", \n    \"lastName\":\"lastName\",\n    \"dob\":\"idk\", \n    \"email\":\"email3@email.email\",\n    \"password\":\"password1\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/find-group?displayName=displayName3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"find-group"
+					],
+					"query": [
+						{
+							"key": "displayName",
+							"value": "displayName3"
+						},
+						{
+							"key": "email",
+							"value": "email1@email.email",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
