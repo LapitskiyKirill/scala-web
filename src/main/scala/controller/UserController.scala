@@ -4,21 +4,13 @@ import _root_.entity._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, onSuccess, path, post, _}
 import akka.http.scaladsl.server.Route
-import repository.{BaseRepository, GroupRepository, UserGroupRepository, UserRepository}
-import slick.jdbc.PostgresProfile.api._
+import service.UserService
 import spray.json.DefaultJsonProtocol._
 import spray.json.RootJsonFormat
 
-import scala.collection.immutable.Seq
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class UserController {
-
-  val userRepository = new UserRepository
-  val groupRepository = new GroupRepository
-  val baseRepository = new BaseRepository
-  val userGroupRepository = new UserGroupRepository
   implicit val userFormat: RootJsonFormat[User] = jsonFormat6(User)
   implicit val groupFormat: RootJsonFormat[Group] = jsonFormat2(Group)
   implicit val userGroupFormat: RootJsonFormat[UserGroup] = jsonFormat3(UserGroup)
@@ -31,7 +23,7 @@ class UserController {
     post {
       path("create-user") {
         entity(as[User]) { user =>
-          val saved: Future[Int] = baseRepository.save[User, UserTable](user, Tables.users)
+          val saved: Future[Int] = UserService.create(user)
           onSuccess(saved) { _ =>
             complete("user created")
           }
@@ -41,7 +33,7 @@ class UserController {
     delete {
       path("delete-user") {
         parameters("id") { id =>
-          val deleted = baseRepository.delete[User, UserTable](Tables.users.filter(_.id === id.toInt))
+          val deleted = UserService.deleteById(id.toInt)
           onSuccess(deleted) { _ =>
             complete("user deleted")
           }
@@ -51,7 +43,7 @@ class UserController {
     post {
       path("update-user") {
         entity(as[User]) { user =>
-          val updated = baseRepository.update[User, UserTable](user, Tables.users)
+          val updated = UserService.update(user)
           onSuccess(updated) { _ =>
             complete("user updated")
           }
@@ -61,10 +53,7 @@ class UserController {
     get {
       path("find-user") {
         parameters("id") { id =>
-          val user = baseRepository.find[User, UserTable](Tables.users.filter(_.id === id.toInt))
-          val userGroupRelations = user.map(user => userGroupRepository.findRelationsForUser(user))
-          val userGroups = userGroupRelations.flatMap(ugr => groupRepository.findUserGroups(ugr))
-          val result = user.flatMap(user => userGroups.map(groups => mapToResultUser(user, groups)))
+          val result = UserService.findById(id)
           onSuccess(result) { result =>
             complete(result)
           }
@@ -72,16 +61,4 @@ class UserController {
       }
     }
   )
-
-  def mapToResultUser(user: User, groups: Seq[Group]): ResultUser = {
-    ResultUser(
-      user.id,
-      user.firstName,
-      user.lastName,
-      user.dob,
-      user.email,
-      user.password,
-      groups
-    )
-  }
 }

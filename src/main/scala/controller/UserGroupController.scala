@@ -5,11 +5,9 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, onSuccess, path, post, _}
 import akka.http.scaladsl.server.Route
 import repository.BaseRepository
-import slick.jdbc.PostgresProfile.api._
+import service.UserGroupService
 import spray.json.DefaultJsonProtocol._
 import spray.json.RootJsonFormat
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class UserGroupController {
 
@@ -22,16 +20,7 @@ class UserGroupController {
     post {
       path("add-user-to-group") {
         entity(as[UserGroup]) { userGroup =>
-          val user = baseRepository.exists[User, UserTable](Tables.users.filter(_.id === userGroup.userId))
-          val group = baseRepository.exists[Group, GroupTable](Tables.groups.filter(_.id === userGroup.groupId))
-          val saved = user.flatMap(u => {
-            group.map(g => {
-              if (g && u)
-                Right(baseRepository.save[UserGroup, UserGroupTable](userGroup, Tables.userGroup))
-              else
-                Left("fail")
-            })
-          })
+          val saved = UserGroupService.addUserToGroup(userGroup)
           onSuccess(saved) {
             case Right(_) => complete("Success")
             case Left(x) => complete(x)
@@ -41,21 +30,13 @@ class UserGroupController {
     },
     post {
       path("delete-user-from-group") {
-        entity(as[UserGroup]) { userGroup =>
-          val user = baseRepository.exists[User, UserTable](Tables.users.filter(_.id === userGroup.userId))
-          val group = baseRepository.exists[Group, GroupTable](Tables.groups.filter(_.id === userGroup.groupId))
-          val saved = user.flatMap(u => {
-            group.map(g => {
-              if (g && u)
-                Right(baseRepository.delete[UserGroup, UserGroupTable](Tables.userGroup.filter(_.id === userGroup.id)))
-              else
-                Left("fail")
-            })
-          })
-          onSuccess(saved) {
-            case Right(_) => complete("Success")
-            case Left(x) => complete(x)
-          }
+        entity(as[UserGroup]) {
+          userGroup =>
+            val deleted = UserGroupService.deleteUserFromGroup(userGroup)
+            onSuccess(deleted) {
+              case Right(_) => complete("Success")
+              case Left(x) => complete(x)
+            }
         }
       }
     }
