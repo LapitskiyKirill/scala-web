@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"1name\", \n    \"lastName\":\"lname\",\n    \"dob\":\"idk\", \n    \"email\":\"emai3@email.email\",\n    \"password\":\"password\"\n   }",
+					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"123\", \n    \"lastName\":\"lna123123me\",\n    \"dob\":\"1999-12-12\", \n    \"email\":\"123123@email.email\",\n    \"password\":\"23123123123\"\n   }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -40,7 +40,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 0,\n    \"displayName\":\"displayName\"\n   }",
+					"raw": "{\n    \"id\": 0,\n    \"displayName\":\"displayName1\"\n   }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -48,14 +48,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/group/create",
+					"raw": "localhost:8080/group",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"group",
-						"create"
+						"group"
 					]
 				}
 			},
@@ -68,7 +67,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\":0,\n    \"userId\":\"email2@email.email\",\n    \"groupId\":\"displayName1\"\n}",
+					"raw": "{\n    \"id\":0,\n    \"userId\":7,\n    \"groupId\":1\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -76,14 +75,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/user-group/add",
+					"raw": "localhost:8080/user-group/",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"user-group",
-						"add"
+						""
 					]
 				}
 			},
@@ -92,11 +91,11 @@
 		{
 			"name": "delete user from group",
 			"request": {
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\":0,\n    \"userId\":\"email2@email.email\",\n    \"groupId\":\"displayName1\"\n}",
+					"raw": "{\n    \"id\":0,\n    \"userId\":7,\n    \"groupId\":1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -104,14 +103,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/user-group/remove",
+					"raw": "localhost:8080/user-group",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"user-group",
-						"remove"
+						"user-group"
 					]
 				}
 			},
@@ -123,20 +121,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/user/delete?id=4",
+					"raw": "localhost:8080/user/15",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"user",
-						"delete"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "4"
-						}
+						"15"
 					]
 				}
 			},
@@ -170,32 +162,26 @@
 		{
 			"name": "update group",
 			"request": {
-				"method": "POST",
+				"method": "PUT",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 2,\n    \"displayName\":\"222222\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:8080/group/update?id=1&newDisplayName=newDisplayName",
+					"raw": "localhost:8080/group/2",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"group",
-						"update"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						},
-						{
-							"key": "newDisplayName",
-							"value": "newDisplayName"
-						},
-						{
-							"key": "",
-							"value": "",
-							"disabled": true
-						}
+						"2"
 					]
 				}
 			},
@@ -204,11 +190,11 @@
 		{
 			"name": "update user",
 			"request": {
-				"method": "POST",
+				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"1name\", \n    \"lastName\":\"lname\",\n    \"dob\":\"idk\", \n    \"email\":\"emai3@email.email\",\n    \"password\":\"password\"\n   }",
+					"raw": "{\n    \"id\": 7,\n    \"firstName\":\"1234\", \n    \"lastName\":\"1234\",\n    \"dob\":\"1999-12-13\", \n    \"email\":\"123@email.email\",\n    \"password\":\"123\"\n   }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -216,14 +202,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/group/update",
+					"raw": "localhost:8080/user/7",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"group",
-						"update"
+						"user",
+						"7"
 					],
 					"query": [
 						{
@@ -264,14 +250,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/user/find?id=1",
+					"raw": "localhost:8080/user/7",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"user",
-						"find"
+						"7"
 					],
 					"query": [
 						{
@@ -281,7 +267,8 @@
 						},
 						{
 							"key": "id",
-							"value": "1"
+							"value": "7",
+							"disabled": true
 						},
 						{
 							"key": "",
@@ -295,46 +282,18 @@
 		},
 		{
 			"name": "find group",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id\": 0,\n    \"firstName\":\"firstName\", \n    \"lastName\":\"lastName\",\n    \"dob\":\"idk\", \n    \"email\":\"email3@email.email\",\n    \"password\":\"password1\"\n   }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "localhost:8080/group/find?id=1",
+					"raw": "localhost:8080/group/2",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"group",
-						"find"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						},
-						{
-							"key": "email",
-							"value": "email1@email.email",
-							"disabled": true
-						},
-						{
-							"key": "",
-							"value": "",
-							"disabled": true
-						}
+						"2"
 					]
 				}
 			},
