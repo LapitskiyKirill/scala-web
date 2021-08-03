@@ -65,10 +65,10 @@ class BaseRepository(db: Database = Database.forConfig("postgres")) {
 
 class UserGroupRepository(db: Database = Database.forConfig("postgres")) {
 
-  def addUserToGroup(user: User, group: Group): Future[Int] = {
+  def removeUserFromGroup(userId: Int, groupId: Int): Future[Int] = {
     val tryAdd = Try {
-      val findQuery = Tables.userGroup += UserGroup(0, user.id, group.id)
-      db.run(findQuery)
+      val removeQuery = Tables.userGroup.filter(ug => ug.userId === userId && ug.groupId === groupId).delete
+      db.run(removeQuery)
     }
     tryAdd match {
       case Success(v) => v

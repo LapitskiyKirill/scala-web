@@ -1,16 +1,10 @@
-import _root_.entity.{UserGroup, _}
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import akka.http.scaladsl.server.Directives.{post, _}
+import akka.http.scaladsl.server.Directives._
 import controller.{GroupController, UserController, UserGroupController}
-import repository.{BaseRepository, GroupRepository, UserGroupRepository, UserRepository}
-import spray.json.DefaultJsonProtocol._
-import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.io.StdIn
 
 object Main {
