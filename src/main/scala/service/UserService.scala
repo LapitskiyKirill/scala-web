@@ -15,14 +15,29 @@ object UserService {
   val baseRepository = new BaseRepository
   val userGroupRepository = new UserGroupRepository
 
-  def update(userDto: UserDto): Future[Int] =
-    baseRepository.update[User, UserTable](UserMapper.userDtoToUser(userDto), Tables.users)
+  def update(userDto: UserDto): Future[Either[String, Int]] =
+    baseRepository.update[User, UserTable](UserMapper.userDtoToUser(userDto), Tables.users).map(res =>
+      if (res != 0)
+        Right(res)
+      else
+        Left("fail")
+    )
 
-  def create(userDto: UserDto): Future[Int] =
-    baseRepository.save[User, UserTable](UserMapper.userDtoToUser(userDto), Tables.users)
+  def create(userDto: UserDto): Future[Either[String, Int]] =
+    baseRepository.save[User, UserTable](UserMapper.userDtoToUser(userDto), Tables.users).map(res =>
+      if (res != 0)
+        Right(res)
+      else
+        Left("fail")
+    )
 
-  def deleteById(id: Int): Future[Int] =
-    baseRepository.delete[User, UserTable](Tables.users.filter(_.id === id))
+  def deleteById(id: Int): Future[Either[String, Int]] =
+    baseRepository.delete[User, UserTable](Tables.users.filter(_.id === id)).map(res =>
+      if (res != 0)
+        Right(res)
+      else
+        Left("fail")
+    )
 
   def findById(id: Int): Future[Option[ResultUser]] = {
     val user = baseRepository.find[User, UserTable](Tables.users.filter(_.id === id))

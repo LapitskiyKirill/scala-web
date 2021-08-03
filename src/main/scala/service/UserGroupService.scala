@@ -15,12 +15,13 @@ object UserGroupService {
   val userGroupRepository = new UserGroupRepository
   implicit val userGroupFormat: RootJsonFormat[UserGroup] = jsonFormat3(UserGroup)
 
-  def addUserToGroup(userGroup: UserGroup): Future[Either[String, Future[Int]]] = {
-    checkIfUserAndGroupExists(userGroup).map(exists => {
-      if (exists)
-        Right(baseRepository.save[UserGroup, UserGroupTable](userGroup, Tables.userGroup))
-      else
-        Left("fail")
+  def addUserToGroup(userGroup: UserGroup): Future[Either[String, Int]] = {
+    checkIfUserAndGroupExists(userGroup).flatMap(exists => {
+      baseRepository.save[UserGroup, UserGroupTable](userGroup, Tables.userGroup).map(res =>
+        if (exists && res != 0)
+          Right(res)
+        else
+          Left("fail"))
     })
   }
 

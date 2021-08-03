@@ -14,11 +14,26 @@ object GroupService {
   val baseRepository = new BaseRepository
   val userGroupRepository = new UserGroupRepository
 
-  def create(groupDto: GroupDto): Future[Int] = baseRepository.save[Group, GroupTable](GroupMapper.groupDtoToGroup(groupDto), Tables.groups)
+  def create(groupDto: GroupDto): Future[Either[String, Int]] = baseRepository.save[Group, GroupTable](GroupMapper.groupDtoToGroup(groupDto), Tables.groups).map(res =>
+    if (res != 0)
+      Right(res)
+    else
+      Left("fail")
+  )
 
-  def delete(id: Int): Future[Int] = baseRepository.delete[Group, GroupTable](Tables.groups.filter(_.id === id))
+  def delete(id: Int): Future[Either[String, Int]] = baseRepository.delete[Group, GroupTable](Tables.groups.filter(_.id === id)).map(res =>
+    if (res != 0)
+      Right(res)
+    else
+      Left("fail")
+  )
 
-  def update(groupDto: GroupDto): Future[Int] = baseRepository.update[Group, GroupTable](GroupMapper.groupDtoToGroup(groupDto), Tables.groups)
+  def update(groupDto: GroupDto): Future[Either[String, Int]] = baseRepository.update[Group, GroupTable](GroupMapper.groupDtoToGroup(groupDto), Tables.groups).map(res =>
+    if (res != 0)
+      Right(res)
+    else
+      Left("fail")
+  )
 
   def findById(id: Int): Future[Option[ResultGroup]] = {
     val group = baseRepository.find[Group, GroupTable](Tables.groups.filter(_.id === id))

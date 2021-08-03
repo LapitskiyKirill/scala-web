@@ -26,10 +26,8 @@ class UserController {
         post {
           path("create") {
             entity(as[UserDto]) { user =>
-              val saved: Future[Int] = UserService.create(user)
-              onSuccess(saved) { _ =>
-                complete("user created")
-              }
+              val saved = UserService.create(user)
+              processResult(saved)
             }
           }
         },
@@ -37,9 +35,7 @@ class UserController {
           path("delete") {
             parameters("id") { id =>
               val deleted = UserService.deleteById(id.toInt)
-              onSuccess(deleted) { _ =>
-                complete("user deleted")
-              }
+              processResult(deleted)
             }
           }
         },
@@ -47,9 +43,7 @@ class UserController {
           path("update") {
             entity(as[UserDto]) { user =>
               val updated = UserService.update(user)
-              onSuccess(updated) { _ =>
-                complete("user updated")
-              }
+              processResult(updated)
             }
           }
         },
@@ -66,4 +60,11 @@ class UserController {
       )
     }
   )
+
+  def processResult(result: Future[Either[String, Int]]): Route = {
+    onSuccess(result) {
+      case Right(_) => complete("Success")
+      case Left(x) => complete(x)
+    }
+  }
 }

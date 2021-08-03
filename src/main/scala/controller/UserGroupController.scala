@@ -9,6 +9,8 @@ import service.UserGroupService
 import spray.json.DefaultJsonProtocol._
 import spray.json.RootJsonFormat
 
+import scala.concurrent.Future
+
 class UserGroupController {
 
   val baseRepository = new BaseRepository
@@ -23,10 +25,7 @@ class UserGroupController {
           path("add") {
             entity(as[UserGroup]) { userGroup =>
               val saved = UserGroupService.addUserToGroup(userGroup)
-              onSuccess(saved) {
-                case Right(_) => complete("Success")
-                case Left(x) => complete(x)
-              }
+              processResult(saved)
             }
           }
         },
@@ -35,14 +34,18 @@ class UserGroupController {
             entity(as[UserGroup]) {
               userGroup =>
                 val deleted = UserGroupService.deleteUserFromGroup(userGroup)
-                onSuccess(deleted) {
-                  case Right(_) => complete("Success")
-                  case Left(x) => complete(x)
-                }
+                processResult(deleted)
             }
           }
         }
       )
     }
   )
+
+  def processResult(result: Future[Either[String, Int]]): Route = {
+    onSuccess(result) {
+      case Right(_) => complete("Success")
+      case Left(x) => complete(x)
+    }
+  }
 }

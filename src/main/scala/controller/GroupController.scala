@@ -26,10 +26,8 @@ class GroupController {
         post {
           path("create") {
             entity(as[GroupDto]) { group =>
-              val saved: Future[Int] = GroupService.create(group)
-              onSuccess(saved) { _ =>
-                complete("group created")
-              }
+              val saved = GroupService.create(group)
+              processResult(saved)
             }
           }
         },
@@ -37,9 +35,7 @@ class GroupController {
           path("delete") {
             parameters("id") { id =>
               val deleted = GroupService.delete(id.toInt)
-              onSuccess(deleted) { _ =>
-                complete("group deleted")
-              }
+              processResult(deleted)
             }
           }
         },
@@ -47,9 +43,7 @@ class GroupController {
           path("update") {
             entity(as[GroupDto]) { group =>
               val updated = GroupService.update(group)
-              onSuccess(updated) { _ =>
-                complete("group updated")
-              }
+              processResult(updated)
             }
           }
         },
@@ -66,4 +60,11 @@ class GroupController {
       )
     }
   )
+
+  def processResult(result: Future[Either[String, Int]]): Route = {
+    onSuccess(result) {
+      case Right(_) => complete("Success")
+      case Left(x) => complete(x)
+    }
+  }
 }
