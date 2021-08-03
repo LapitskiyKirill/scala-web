@@ -6,6 +6,7 @@ scalaVersion := "2.13.6"
 
 val AkkaVersion = "2.6.15"
 val AkkaHttpVersion = "10.2.5"
+
 libraryDependencies += "com.typesafe" % "config" % "1.4.1"
 libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.13.6"
 libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.3"
@@ -17,7 +18,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
-  "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
+  "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
+  "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion
 )
 enablePlugins(FlywayPlugin)
 version := "0.0.1"

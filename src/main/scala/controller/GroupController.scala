@@ -1,5 +1,6 @@
 package controller
 
+import _root_.entity.UserImplicits.localDateFormat
 import _root_.entity._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, onSuccess, path, post, _}
@@ -11,8 +12,8 @@ import spray.json.RootJsonFormat
 import scala.concurrent.Future
 
 class GroupController {
-  implicit val userFormat: RootJsonFormat[User] = jsonFormat6(User)
-  implicit val groupFormat: RootJsonFormat[Group] = jsonFormat2(Group)
+  implicit val userFormat: RootJsonFormat[UserDto] = jsonFormat6(UserDto)
+  implicit val groupFormat: RootJsonFormat[GroupDto] = jsonFormat2(GroupDto)
   implicit val userGroupFormat: RootJsonFormat[UserGroup] = jsonFormat3(UserGroup)
   implicit val resultUserFormat: RootJsonFormat[ResultUser] = jsonFormat7(ResultUser)
   implicit val resultGroupFormat: RootJsonFormat[ResultGroup] = jsonFormat3(ResultGroup)
@@ -24,7 +25,7 @@ class GroupController {
       concat(
         post {
           path("create") {
-            entity(as[Group]) { group =>
+            entity(as[GroupDto]) { group =>
               val saved: Future[Int] = GroupService.create(group)
               onSuccess(saved) { _ =>
                 complete("group created")
@@ -44,7 +45,7 @@ class GroupController {
         },
         post {
           path("update") {
-            entity(as[Group]) { group =>
+            entity(as[GroupDto]) { group =>
               val updated = GroupService.update(group)
               onSuccess(updated) { _ =>
                 complete("group updated")

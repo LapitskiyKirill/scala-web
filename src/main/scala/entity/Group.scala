@@ -10,10 +10,15 @@ case class Group(
                   displayName: String
                 )
 
+case class GroupDto(
+                     id: Int,
+                     displayName: String
+                   )
+
 case class ResultGroup(
                         id: Int,
                         displayName: String,
-                        users: Seq[User]
+                        users: Seq[UserDto]
                       )
 
 class GroupTable(tag: Tag) extends Table[Group](tag, "group") {

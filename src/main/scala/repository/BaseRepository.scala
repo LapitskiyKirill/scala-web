@@ -1,12 +1,12 @@
 package repository
 
-import akka.actor.TypedActor.dispatcher
 import entity.{Group, Tables, User, UserGroup}
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
 
 import scala.collection.immutable.Seq
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
@@ -22,13 +22,15 @@ class BaseRepository(db: Database = Database.forConfig("postgres")) {
     }
   }
 
-  def find[O, T <: Table[O]](findBy: Query[T, T#TableElementType, Seq]): Future[O] = {
+  def find[O, T <: Table[O]](findBy: Query[T, T#TableElementType, Seq]): Future[Option[O]] = {
     val tryFind = Try {
       val findQuery = findBy.result
       db.run(findQuery).map(_.head)
     }
     tryFind match {
-      case Success(v) => v
+      case Success(v) => v.map(value => Option(value))
+      case Failure(e) => e.printStackTrace()
+        Future(Option.empty[O])
     }
   }
 
