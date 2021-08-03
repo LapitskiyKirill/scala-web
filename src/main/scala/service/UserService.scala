@@ -1,49 +1,54 @@
 package service
 
 import _root_.entity._
-import repository.{BaseRepository, GroupRepository, UserGroupRepository, UserRepository}
+import repository.{BaseRepository, GroupRepository, UserGroupRepository}
 import slick.jdbc.PostgresProfile.api._
 
 import java.sql.Date
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object UserService {
+class UserService(
+                   groupRepository: GroupRepository = new GroupRepository,
+                   baseRepository: BaseRepository = new BaseRepository,
+                   userGroupRepository: UserGroupRepository = new UserGroupRepository
+                 ) {
 
-  val userRepository = new UserRepository
-  val groupRepository = new GroupRepository
-  val baseRepository = new BaseRepository
-  val userGroupRepository = new UserGroupRepository
 
-  def update(userDto: UserDto): Future[Either[String, Int]] =
-    baseRepository.update[User, UserTable](UserMapper.userDtoToUser(userDto), Tables.users).map(res =>
+  def update(id: Int, userDto: UserDto): Future[Either[String, String]] =
+    baseRepository.update[User, UserTable](UserMapper.userDtoToUser(userDto), Tables.users.filter(_.id === id)).map(res =>
       if (res != 0)
-        Right(res)
+        Right("Success")
       else
-        Left("fail")
+        Left("Fail")
     )
 
-  def create(userDto: UserDto): Future[Either[String, Int]] =
+  def create(userDto: UserDto): Future[Either[String, String]] =
     baseRepository.save[User, UserTable](UserMapper.userDtoToUser(userDto), Tables.users).map(res =>
       if (res != 0)
-        Right(res)
+        Right("Success")
       else
-        Left("fail")
+        Left("Fail")
     )
 
-  def deleteById(id: Int): Future[Either[String, Int]] =
+  def deleteById(id: Int): Future[Either[String, String]] =
     baseRepository.delete[User, UserTable](Tables.users.filter(_.id === id)).map(res =>
       if (res != 0)
-        Right(res)
+        Right("Success")
       else
-        Left("fail")
+        Left("Fail")
     )
 
-  def findById(id: Int): Future[Option[ResultUser]] = {
+  def findById(id: Int): Future[Either[String, Option[ResultUser]]] = {
     val user = baseRepository.find[User, UserTable](Tables.users.filter(_.id === id))
     val userGroupRelations = user.map(_.map(userGroupRepository.findRelationsForUser))
     val userGroups = userGroupRelations.flatMap(ugr => Future.sequence(Option.option2Iterable(ugr.map(groupRepository.findUserGroups))).map(_.head))
-    user.flatMap(user => userGroups.map(groups => user.map(u => UserMapper.mapToResultUser(u, groups))))
+    user.flatMap(user => userGroups.map(groups => user.map(u => UserMapper.mapToResultUser(u, groups)))).map(res =>
+      if (res.isDefined)
+        Right(res)
+      else
+        Left("Fail")
+    )
   }
 }
 

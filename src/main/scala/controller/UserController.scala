@@ -11,12 +11,13 @@ import spray.json.RootJsonFormat
 
 import scala.concurrent.Future
 
-class UserController {
+class UserController(userService: UserService = new UserService) {
   implicit val userFormat: RootJsonFormat[UserDto] = jsonFormat6(UserDto)
   implicit val groupFormat: RootJsonFormat[GroupDto] = jsonFormat2(GroupDto)
   implicit val userGroupFormat: RootJsonFormat[UserGroup] = jsonFormat3(UserGroup)
   implicit val resultUserFormat: RootJsonFormat[ResultUser] = jsonFormat7(ResultUser)
   implicit val resultGroupFormat: RootJsonFormat[ResultGroup] = jsonFormat3(ResultGroup)
+  implicit val responseFormat: RootJsonFormat[Response] = jsonFormat1(Response)
 
   def getRoute: Route = route
 
@@ -24,36 +25,30 @@ class UserController {
     pathPrefix("user") {
       concat(
         post {
-          path("create") {
-            entity(as[UserDto]) { user =>
-              val saved = UserService.create(user)
-              processResult(saved)
-            }
+          entity(as[UserDto]) { user =>
+            val saved = userService.create(user)
+            processResult(201, saved)
           }
         },
         delete {
-          path("delete") {
-            parameters("id") { id =>
-              val deleted = UserService.deleteById(id.toInt)
-              processResult(deleted)
-            }
+          path(Segment) { id =>
+            val deleted = userService.deleteById(id.toInt)
+            processResult(200, deleted)
           }
         },
-        post {
-          path("update") {
+        put {
+          path(Segment) { id =>
             entity(as[UserDto]) { user =>
-              val updated = UserService.update(user)
-              processResult(updated)
+              val updated = userService.update(id.toInt, user)
+              processResult(200, updated)
             }
           }
         },
         get {
-          path("find") {
-            parameters("id") { id =>
-              val result = UserService.findById(id.toInt)
-              onSuccess(result) { result =>
-                complete(result)
-              }
+          path(Segment) { id =>
+            val result = userService.findById(id.toInt)
+            onSuccess(result) { result =>
+              complete(200, result)
             }
           }
         }
@@ -61,10 +56,10 @@ class UserController {
     }
   )
 
-  def processResult(result: Future[Either[String, Int]]): Route = {
+  def processResult(successStatusCode: Int, result: Future[Either[String, String]]): Route = {
     onSuccess(result) {
-      case Right(_) => complete("Success")
-      case Left(x) => complete(x)
+      case Right(x) => complete(successStatusCode, Response(x))
+      case Left(x) => complete(500, Response(x))
     }
   }
 }

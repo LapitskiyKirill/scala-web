@@ -1,45 +1,53 @@
 package service
 
 import _root_.entity._
-import repository.{BaseRepository, GroupRepository, UserGroupRepository, UserRepository}
+import repository.{BaseRepository, UserGroupRepository, UserRepository}
 import slick.jdbc.PostgresProfile.api._
 
 import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object GroupService {
-  val userRepository = new UserRepository
-  val groupRepository = new GroupRepository
-  val baseRepository = new BaseRepository
-  val userGroupRepository = new UserGroupRepository
+class GroupService(
+                    userRepository: UserRepository = new UserRepository,
+                    baseRepository: BaseRepository = new BaseRepository,
+                    userGroupRepository: UserGroupRepository = new UserGroupRepository
+                  ) {
 
-  def create(groupDto: GroupDto): Future[Either[String, Int]] = baseRepository.save[Group, GroupTable](GroupMapper.groupDtoToGroup(groupDto), Tables.groups).map(res =>
-    if (res != 0)
-      Right(res)
-    else
-      Left("fail")
-  )
+  def create(groupDto: GroupDto): Future[Either[String, String]] =
+    baseRepository.save[Group, GroupTable](GroupMapper.groupDtoToGroup(groupDto), Tables.groups).map(res =>
+      if (res != 0)
+        Right("Success")
+      else
+        Left("Fail")
+    )
 
-  def delete(id: Int): Future[Either[String, Int]] = baseRepository.delete[Group, GroupTable](Tables.groups.filter(_.id === id)).map(res =>
-    if (res != 0)
-      Right(res)
-    else
-      Left("fail")
-  )
+  def delete(id: Int): Future[Either[String, String]] =
+    baseRepository.delete[Group, GroupTable](Tables.groups.filter(_.id === id)).map(res =>
+      if (res != 0)
+        Right("Success")
+      else
+        Left("Fail")
+    )
 
-  def update(groupDto: GroupDto): Future[Either[String, Int]] = baseRepository.update[Group, GroupTable](GroupMapper.groupDtoToGroup(groupDto), Tables.groups).map(res =>
-    if (res != 0)
-      Right(res)
-    else
-      Left("fail")
-  )
+  def update(id: Int, groupDto: GroupDto): Future[Either[String, String]] =
+    baseRepository.update[Group, GroupTable](GroupMapper.groupDtoToGroup(groupDto), Tables.groups.filter(_.id === id)).map(res =>
+      if (res != 0)
+        Right("Success")
+      else
+        Left("Fail")
+    )
 
-  def findById(id: Int): Future[Option[ResultGroup]] = {
+  def findById(id: Int): Future[Either[String, Option[ResultGroup]]] = {
     val group = baseRepository.find[Group, GroupTable](Tables.groups.filter(_.id === id))
     val groupUsersRelations = group.map(group => group.map(userGroupRepository.findRelationsForGroup))
     val groupUsers = groupUsersRelations.flatMap(ugr => Future.sequence(Option.option2Iterable(ugr.map(userRepository.findGroupUsers))).map(_.head))
-    group.flatMap(group => groupUsers.map(users => group.map(g => GroupMapper.mapToResultGroup(g, users))))
+    group.flatMap(group => groupUsers.map(users => group.map(g => GroupMapper.mapToResultGroup(g, users)))).map(res =>
+      if (res.isDefined)
+        Right(res)
+      else
+        Left("Fail")
+    )
   }
 }
 

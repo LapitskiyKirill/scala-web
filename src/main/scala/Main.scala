@@ -3,6 +3,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import controller.{GroupController, UserController, UserGroupController}
+import util.Config
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.StdIn
@@ -11,7 +12,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    implicit val system = ActorSystem(Behaviors.empty, "my-system")
+    implicit val system = ActorSystem(Behaviors.empty, Config.actorSystemName)
 
     val route = concat(
       (new GroupController).getRoute,
@@ -19,11 +20,11 @@ object Main {
       (new UserGroupController).getRoute
     )
 
-    val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
+    val bindingFuture = Http().newServerAt(Config.path, Config.port).bind(route)
 
-    StdIn.readLine() // let it run until user presses return
+    StdIn.readLine()
     bindingFuture
-      .flatMap(_.unbind()) // trigger unbinding from the port
-      .onComplete(_ => system.terminate()) // and shutdown when done
+      .flatMap(_.unbind())
+      .onComplete(_ => system.terminate())
   }
 }

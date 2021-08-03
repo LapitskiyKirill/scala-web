@@ -11,12 +11,13 @@ import spray.json.RootJsonFormat
 
 import scala.concurrent.Future
 
-class GroupController {
+class GroupController(groupService: GroupService = new GroupService) {
   implicit val userFormat: RootJsonFormat[UserDto] = jsonFormat6(UserDto)
   implicit val groupFormat: RootJsonFormat[GroupDto] = jsonFormat2(GroupDto)
   implicit val userGroupFormat: RootJsonFormat[UserGroup] = jsonFormat3(UserGroup)
   implicit val resultUserFormat: RootJsonFormat[ResultUser] = jsonFormat7(ResultUser)
   implicit val resultGroupFormat: RootJsonFormat[ResultGroup] = jsonFormat3(ResultGroup)
+  implicit val responseFormat: RootJsonFormat[Response] = jsonFormat1(Response)
 
   def getRoute: Route = route
 
@@ -24,36 +25,30 @@ class GroupController {
     pathPrefix("group") {
       concat(
         post {
-          path("create") {
-            entity(as[GroupDto]) { group =>
-              val saved = GroupService.create(group)
-              processResult(saved)
-            }
+          entity(as[GroupDto]) { group =>
+            val saved = groupService.create(group)
+            processResult(201, saved)
           }
         },
         delete {
-          path("delete") {
-            parameters("id") { id =>
-              val deleted = GroupService.delete(id.toInt)
-              processResult(deleted)
-            }
+          path(Segment) { id =>
+            val deleted = groupService.delete(id.toInt)
+            processResult(200, deleted)
           }
         },
-        post {
-          path("update") {
+        put {
+          path(Segment) { id =>
             entity(as[GroupDto]) { group =>
-              val updated = GroupService.update(group)
-              processResult(updated)
+              val updated = groupService.update(id.toInt, group)
+              processResult(200, updated)
             }
           }
         },
         get {
-          path("find") {
-            parameters("id") { id =>
-              val result = GroupService.findById(id.toInt)
-              onSuccess(result) { result =>
-                complete(result)
-              }
+          path(Segment) { id =>
+            val result = groupService.findById(id.toInt)
+            onSuccess(result) { result =>
+              complete(result)
             }
           }
         }
@@ -61,10 +56,10 @@ class GroupController {
     }
   )
 
-  def processResult(result: Future[Either[String, Int]]): Route = {
+  def processResult[T, O](successStatusCode: Int, result: Future[Either[String, String]]): Route = {
     onSuccess(result) {
-      case Right(_) => complete("Success")
-      case Left(x) => complete(x)
+      case Right(x) => complete(successStatusCode, Response(x))
+      case Left(x) => complete(500, Response(x))
     }
   }
 }

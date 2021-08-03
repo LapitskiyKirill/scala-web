@@ -1,6 +1,6 @@
 package repository
 
-import entity.{Group, Tables, User, UserGroup}
+import entity.{Group, Tables, User}
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
