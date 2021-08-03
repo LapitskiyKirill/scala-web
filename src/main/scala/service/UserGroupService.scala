@@ -39,12 +39,7 @@ class UserGroupService(
   }
 
   def checkIfUserAndGroupExists(userGroup: UserGroup): Future[Boolean] = {
-    val user = baseRepository.exists[User, UserTable](Tables.users.filter(_.id === userGroup.userId))
-    val group = baseRepository.exists[Group, GroupTable](Tables.groups.filter(_.id === userGroup.groupId))
-    user.flatMap(u => {
-      group.map(g => {
-        g && u
-      })
-    })
+    userGroupRepository.checkIfUserAndGroupExists(userGroup).map(tuple => tuple._1 && tuple._2)
+
   }
 }

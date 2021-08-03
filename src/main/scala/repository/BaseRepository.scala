@@ -1,6 +1,6 @@
 package repository
 
-import entity.{Group, Tables, User}
+import entity.{Group, Tables, User, UserGroup}
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
@@ -84,6 +84,12 @@ class UserGroupRepository(db: Database = Database.forConfig("postgres")) {
 
   def findRelationsForUser(user: User): Query[Rep[Int], Int, Seq] = {
     Tables.userGroup.filter(_.userId === user.id).map(_.groupId)
+  }
+
+  def checkIfUserAndGroupExists(userGroup: UserGroup): Future[(Boolean, Boolean)] = {
+    db.run((for {
+      (c, s) <- Tables.users join Tables.groups
+    } yield (c.id === userGroup.userId, s.id === userGroup.groupId)).result.map(_.head))
   }
 }
 
