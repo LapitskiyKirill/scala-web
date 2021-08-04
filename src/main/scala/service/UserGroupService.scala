@@ -26,14 +26,12 @@ class UserGroupService(
 
   def deleteUserFromGroup(userId: Int, groupId: Int): Future[Either[String, String]] = {
     val userGroup = UserGroup(0, userId, groupId)
-    checkIfUserAndGroupExists(userGroup).flatMap(exists => {
       userGroupRepository.removeUserFromGroup(userGroup.userId, userGroup.groupId).map(res =>
-        if (exists && res != 0)
+        if (res != 0)
           Right("Success")
         else
           Left("Fail")
       )
-    })
   }
 
   def checkIfUserAndGroupExists(userGroup: UserGroup): Future[Boolean] = {

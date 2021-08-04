@@ -20,14 +20,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/user/create",
+					"raw": "localhost:8080/user",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"user",
-						"create"
+						"user"
 					]
 				}
 			},
@@ -63,26 +62,19 @@
 		{
 			"name": "add user to group",
 			"request": {
-				"method": "POST",
+				"method": "PUT",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id\":0,\n    \"userId\":7,\n    \"groupId\":1\n    }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "localhost:8080/user-group/",
+					"raw": "localhost:8080/user/38/group/1",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"user-group",
-						""
+						"user",
+						"38",
+						"group",
+						"1"
 					]
 				}
 			},
@@ -95,7 +87,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\":0,\n    \"userId\":7,\n    \"groupId\":1\n}",
+					"raw": "{\n    \"id\":0,\n    \"userId\":20,\n    \"groupId\":10\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -103,13 +95,15 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/user-group",
+					"raw": "localhost:8080/user/38group/1",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"user-group"
+						"user",
+						"38group",
+						"1"
 					]
 				}
 			},
@@ -294,6 +288,33 @@
 					"path": [
 						"group",
 						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "save grouped users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"group\": \n    {  \n        \"id\": 0,   \n        \"displayName\":\"try12\"   \n    },\n   \"users\":\n   [\n        {\n    \"id\":0,\n    \"firstName\":\"123\", \n    \"lastName\":\"lna123123me\",\n    \"dob\":\"1999-12-12\", \n    \"email\":\"try11@email.email\",\n    \"password\":\"23123123123\"\n   }, {\n    \"id\":0,\n    \"firstName\":\"123\", \n    \"lastName\":\"lna123123me\",\n    \"dob\":\"1999-12-12\", \n    \"email\":\"try13@email.email\",\n    \"password\":\"23123123123\"\n   }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/grouped",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"grouped"
 					]
 				}
 			},
