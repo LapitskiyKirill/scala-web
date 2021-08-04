@@ -15,16 +15,17 @@ class UserGroupService(
 
   implicit val userGroupFormat: RootJsonFormat[UserGroup] = jsonFormat3(UserGroup)
 
-  def addUserToGroup(userGroup: UserGroup): Future[Either[String, String]] = {
-      baseRepository.save[UserGroup, UserGroupTable](userGroup, Tables.userGroup).map(res =>
-        if (res != 0) {
-          Right("Success")
-        } else
-          Left("Fail")
-      )
+  def addUserToGroup(userId: Int, groupId: Int): Future[Either[String, String]] = {
+    baseRepository.save[UserGroup, UserGroupTable](UserGroup(0, userId, groupId), Tables.userGroup).map(res =>
+      if (res != 0) {
+        Right("Success")
+      } else
+        Left("Fail")
+    )
   }
 
-  def deleteUserFromGroup(userGroup: UserGroup): Future[Either[String, String]] = {
+  def deleteUserFromGroup(userId: Int, groupId: Int): Future[Either[String, String]] = {
+    val userGroup = UserGroup(0, userId, groupId)
     checkIfUserAndGroupExists(userGroup).flatMap(exists => {
       userGroupRepository.removeUserFromGroup(userGroup.userId, userGroup.groupId).map(res =>
         if (exists && res != 0)

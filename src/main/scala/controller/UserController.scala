@@ -4,13 +4,16 @@ import _root_.entity.Implicits._
 import _root_.entity._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.{StatusCode, StatusCodes}
-import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, onSuccess, path, post, _}
+import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, onSuccess, path, post, put, _}
 import akka.http.scaladsl.server.Route
-import service.UserService
+import service.{UserGroupService, UserService}
 
 import scala.concurrent.Future
 
-class UserController(userService: UserService = new UserService) {
+class UserController(
+                      userService: UserService = new UserService,
+                      userGroupService: UserGroupService = new UserGroupService
+                    ) {
 
   def getRoute: Route = route
 
@@ -26,7 +29,7 @@ class UserController(userService: UserService = new UserService) {
         delete {
           path(Segment) { id =>
             val deleted = userService.deleteById(id.toInt)
-            processResult(StatusCodes.NoContent , deleted)
+            processResult(StatusCodes.NoContent, deleted)
           }
         },
         put {
@@ -44,10 +47,21 @@ class UserController(userService: UserService = new UserService) {
               complete(StatusCodes.OK, result)
             }
           }
+        },
+        put {
+          path(IntNumber / "group" / IntNumber) { (userId, groupId) =>
+            val saved = userGroupService.addUserToGroup(userId, groupId)
+            processResult(StatusCodes.Created, saved)
+          }
+        },
+        delete {
+          path(IntNumber / "group" / IntNumber) { (userId, groupId) =>
+            val saved = userGroupService.deleteUserFromGroup(userId, groupId)
+            processResult(StatusCodes.Created, saved)
+          }
         }
       )
-    }
-  )
+    })
 
   def processResult(successStatusCode: StatusCode, result: Future[Either[String, String]]): Route = {
     onSuccess(result) {
