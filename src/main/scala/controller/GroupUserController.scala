@@ -6,31 +6,22 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.{StatusCode, StatusCodes}
 import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, onSuccess, post, _}
 import akka.http.scaladsl.server.Route
-import service.UserGroupService
+import service.GroupUsersService
 
 import scala.concurrent.Future
 
-class UserGroupController(userGroupService: UserGroupService = new UserGroupService()) {
+class GroupUserController(groupUsersService: GroupUsersService = new GroupUsersService) {
 
   def getRoute: Route = route
 
   val route: Route = concat(
-    pathPrefix("user-group") {
-      concat(
-        post {
-          entity(as[UserGroup]) { userGroup =>
-            val saved = userGroupService.addUserToGroup(userGroup)
-            processResult(StatusCodes.Created, saved)
-          }
-        },
-        delete {
-          entity(as[UserGroup]) {
-            userGroup =>
-              val deleted = userGroupService.deleteUserFromGroup(userGroup)
-              processResult(StatusCodes.NoContent, deleted)
-          }
+    pathPrefix("grouped") {
+      post {
+        entity(as[GroupUsers]) { groupUsers =>
+          val saved = groupUsersService.save(groupUsers)
+          processResult(StatusCodes.Created, saved)
         }
-      )
+      }
     }
   )
 

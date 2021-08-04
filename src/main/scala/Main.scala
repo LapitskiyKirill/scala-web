@@ -2,7 +2,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
-import controller.{GroupController, UserController, UserGroupController}
+import controller.{GroupController, GroupUserController, UserController, UserGroupController}
 import util.Config
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,7 +17,8 @@ object Main {
     val route = concat(
       (new GroupController).getRoute,
       (new UserController).getRoute,
-      (new UserGroupController).getRoute
+      (new UserGroupController).getRoute,
+      (new GroupUserController).getRoute
     )
 
     val bindingFuture = Http().newServerAt(Config.path, Config.port).bind(route)
