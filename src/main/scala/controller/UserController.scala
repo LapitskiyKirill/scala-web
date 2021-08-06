@@ -59,9 +59,16 @@ class UserController(
             val saved = userGroupService.deleteUserFromGroup(userId, groupId)
             processResult(StatusCodes.Created, saved)
           }
+        },
+        get {
+            val result = userService.getAll
+            onSuccess(result) {
+              f=>complete("ss")
+          }
         }
       )
-    })
+    }
+  )
 
   def processResult(successStatusCode: StatusCode, result: Future[Either[String, String]]): Route = {
     onSuccess(result) {
