@@ -19,7 +19,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
-  "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion
+  "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion,
+  "com.typesafe.akka" %% "akka-stream" % AkkaVersion
 )
 enablePlugins(FlywayPlugin)
 version := "0.0.1"

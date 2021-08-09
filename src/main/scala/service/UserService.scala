@@ -2,7 +2,9 @@ package service
 
 import _root_.entity._
 import repository.{BaseRepository, DatabaseStorage, GroupRepository, UserGroupRepository}
+import slick.basic.DatabasePublisher
 import slick.jdbc.PostgresProfile.api._
+import slick.jdbc.{ResultSetConcurrency, ResultSetType}
 
 import java.sql.Date
 import scala.collection.mutable
@@ -52,28 +54,26 @@ class UserService(
     )
   }
 
-  def getAll: Future[Boolean] = {
-    println("start")
-    val start = System.nanoTime
-    val user = Tables.users.take(1000).result
-    val res = DatabaseStorage.db.run(user)
-      .flatMap(a =>
-        Future.sequence(a.map(user =>
-          groupRepository.findUserGroups(userGroupRepository.findRelationsForUser(user))
-            .map(groupSeq => {
-              val resUser = UserMapper.mapToResultUser(user, groupSeq)
-              println(resUser)
-              resUser
-            }
-            )
-        ))
-      )
-    res.map(list => {
-      println(list.size)
-      val end = System.nanoTime
-      println((end - start) / 1000000 + " ms")
-    })
-    Future(true)
+  def getAll: DatabasePublisher[User] = {
+    val user = Tables.users.result.withStatementParameters(
+      rsType = ResultSetType.ForwardOnly,
+      rsConcurrency = ResultSetConcurrency.ReadOnly,
+      fetchSize = 100)
+    DatabaseStorage.db.stream(user)
+
+    //    val res = DatabaseStorage.db.run(user)
+    //      .flatMap(a =>
+    //        Future.sequence(a.map(user =>
+    //          groupRepository.findUserGroups(userGroupRepository.findRelationsForUser(user))
+    //            .map(groupSeq => {
+    //              val resUser = UserMapper.mapToResultUser(user, groupSeq)
+    //              println(resUser)
+    //              resUser
+    //            }
+    //            )
+    //        ))
+    //      )
+    //    Future(true)
   }
 }
 
