@@ -54,11 +54,19 @@ object UserImplicits {
   implicit val localDateFormat: RootJsonFormat[LocalDate] = new RootJsonFormat[LocalDate] {
     private val iso_date_time = DateTimeFormatter.ISO_DATE
 
-    def write(x: LocalDate) = JsString(iso_date_time.format(x))
+    def write(x: LocalDate): JsString = JsString(iso_date_time.format(x))
 
     def read(value: JsValue): LocalDate = value match {
       case JsString(x) => LocalDate.parse(x, iso_date_time)
       case x => throw new RuntimeException(s"Unexpected type ${x.getClass.getName} when trying to parse LocalDateTime")
+    }
+  }
+  implicit val dateFormat: RootJsonFormat[Date] = new RootJsonFormat[Date] {
+    def write(x: Date): JsString = JsString(x.toString)
+
+    def read(value: JsValue): Date = value match {
+      case JsString(x) => Date.valueOf(value.toString())
+      case x => throw new RuntimeException(s"Unexpected type ${x.getClass.getName} when trying to parse Date")
     }
   }
 }

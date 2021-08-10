@@ -2,15 +2,15 @@ package controller
 
 import _root_.entity.Implicits._
 import _root_.entity._
-import akka.NotUsed
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.common.{EntityStreamingSupport, JsonEntityStreamingSupport}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCode, StatusCodes}
+import akka.http.scaladsl.model.{StatusCode, StatusCodes}
 import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, onSuccess, path, post, put, _}
 import akka.http.scaladsl.server.Route
-import akka.stream.scaladsl.Source
-import akka.util.ByteString
 import service.{UserGroupService, UserService}
+import util.Config
 
 import scala.concurrent.Future
 
@@ -21,6 +21,7 @@ class UserController(
 
   def getRoute: Route = route
 
+  implicit val system = ActorSystem(Behaviors.empty, Config.actorSystemName)
   implicit val jsonStreamingSupport: JsonEntityStreamingSupport =
     EntityStreamingSupport.json()
       .withParallelMarshalling(parallelism = 8, unordered = true)
@@ -69,12 +70,8 @@ class UserController(
           }
         },
         get {
-          val source = Source.fromPublisher(userService.getAll)
-          complete(
-            HttpEntity.Chunked.fromData(ContentTypes.`application/octet-stream`,
-              source.map(user => ByteString(user.toString))
-            )
-          )
+          val source = userService.getAll
+          complete(source)
         }
       )
     }

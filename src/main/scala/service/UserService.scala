@@ -1,15 +1,16 @@
 package service
 
 import _root_.entity._
+import akka.NotUsed
+import akka.stream.scaladsl.Source
 import repository.{BaseRepository, DatabaseStorage, GroupRepository, UserGroupRepository}
-import slick.basic.DatabasePublisher
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.{ResultSetConcurrency, ResultSetType}
 
 import java.sql.Date
-import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
 
 class UserService(
                    groupRepository: GroupRepository = new GroupRepository,
@@ -54,12 +55,13 @@ class UserService(
     )
   }
 
-  def getAll: DatabasePublisher[User] = {
-    val user = Tables.users.result.withStatementParameters(
-      rsType = ResultSetType.ForwardOnly,
-      rsConcurrency = ResultSetConcurrency.ReadOnly,
-      fetchSize = 100)
-    DatabaseStorage.db.stream(user)
+  def getAll: Source[User, NotUsed] = {
+    val user = Tables.users.take(1000).result.withStatementParameters(
+      rsType = ResultSetType.ScrollSensitive,
+      rsConcurrency = ResultSetConcurrency.Auto,
+      fetchSize = 1
+    )
+    Source.fromPublisher(DatabaseStorage.db.stream(user)).throttle(10, 1.second)
 
     //    val res = DatabaseStorage.db.run(user)
     //      .flatMap(a =>
