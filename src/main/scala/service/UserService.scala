@@ -7,6 +7,7 @@ import repository.{BaseRepository, DatabaseStorage, GroupRepository, UserGroupRe
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.{ResultSetConcurrency, ResultSetType}
 
+
 import java.sql.Date
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -55,13 +56,20 @@ class UserService(
     )
   }
 
-  def getAll: Source[User, NotUsed] = {
-    val user = Tables.users.take(1000).result.withStatementParameters(
+  def getAll = {
+
+    val join = Tables.users.join(Tables.userGroup).on(_.id === _.userId).result.withStatementParameters(
       rsType = ResultSetType.ScrollSensitive,
       rsConcurrency = ResultSetConcurrency.Auto,
       fetchSize = 1
     )
-    Source.fromPublisher(DatabaseStorage.db.stream(user)).throttle(10, 1.second)
+    Source.fromPublisher(DatabaseStorage.db.stream(join)).throttle(10, 1.second)
+    //    val user = Tables.users.take(1000).result.withStatementParameters(
+    //      rsType = ResultSetType.ScrollSensitive,
+    //      rsConcurrency = ResultSetConcurrency.Auto,
+    //      fetchSize = 1
+    //    )
+    //    Source.fromPublisher(DatabaseStorage.db.stream(user)).throttle(10, 1.second)
 
     //    val res = DatabaseStorage.db.run(user)
     //      .flatMap(a =>

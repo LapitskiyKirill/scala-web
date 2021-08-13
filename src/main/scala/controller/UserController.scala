@@ -11,7 +11,8 @@ import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, onSuc
 import akka.http.scaladsl.server.Route
 import service.{UserGroupService, UserService}
 import util.Config
-
+import spray.json.DefaultJsonProtocol._
+import spray.json.RootJsonFormat
 import scala.concurrent.Future
 
 class UserController(
@@ -71,7 +72,7 @@ class UserController(
         },
         get {
           val source = userService.getAll
-          complete(source)
+         complete(source)
         }
       )
     }
