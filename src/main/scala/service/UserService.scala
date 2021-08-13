@@ -7,7 +7,6 @@ import repository.{BaseRepository, DatabaseStorage, GroupRepository, UserGroupRe
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.{ResultSetConcurrency, ResultSetType}
 
-
 import java.sql.Date
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
