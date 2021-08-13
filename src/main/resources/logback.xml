@@ -1,0 +1,1 @@
+<logger name="slick.jdbc.JdbcBackend.statement" level="INFO"/>
